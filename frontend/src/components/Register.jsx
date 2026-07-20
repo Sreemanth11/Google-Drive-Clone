@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
+import api from '../api';
 
 const Register = ({ onLogin }) => {
   const [formData, setFormData] = useState({
@@ -20,7 +20,7 @@ const Register = ({ onLogin }) => {
 
   const onSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (password !== confirmPassword) {
       setError('Passwords do not match');
       return;
@@ -30,7 +30,7 @@ const Register = ({ onLogin }) => {
     setError('');
 
     try {
-      const res = await axios.post('/auth/register', {
+      const res = await api.post('/auth/register', {
         name,
         email,
         password
@@ -51,9 +51,9 @@ const Register = ({ onLogin }) => {
     <div className="auth-container">
       <div className="auth-header">
         <div className="header-left">
-          <img 
-            src="/images/drive-logo.jpg" 
-            alt="Drive Logo" 
+          <img
+            src="/images/drive-logo.jpg"
+            alt="Drive Logo"
             className="drive-logo-img"
           />
           <h1>Google Drive   </h1>
@@ -93,7 +93,7 @@ const Register = ({ onLogin }) => {
               required
             />
           </div>
-          
+
           <div className="form-group">
             <label>Password</label>
             <input

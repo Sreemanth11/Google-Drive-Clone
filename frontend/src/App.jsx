@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import axios from 'axios';
 import Login from './components/Login';
 import Register from './components/Register';
 import Dashboard from './components/Dashboard';
 import ShareFile from './components/ShareFile';
 import './App.css';
+import api from './api';
 
 // Configure axios
-axios.defaults.baseURL = 'http://localhost:5000/api';
+axios.defaults.baseURL = import.meta.env.VITE_API_URL;
 
 function App() {
   const [user, setUser] = useState(null);
@@ -17,7 +17,7 @@ function App() {
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (token) {
-      axios.defaults.headers.common['x-auth-token'] = token;
+      api.defaults.headers.common['x-auth-token'] = token;
       getUser();
     } else {
       setLoading(false);
@@ -37,24 +37,24 @@ function App() {
 
   const getUser = async () => {
     try {
-      const res = await axios.get('/auth/me');
+      const res = await api.get('/auth/me');
       setUser(normalizeUser(res.data));
     } catch (error) {
       localStorage.removeItem('token');
-      delete axios.defaults.headers.common['x-auth-token'];
+      delete api.defaults.headers.common['x-auth-token'];
     }
     setLoading(false);
   };
 
   const login = (token, userData) => {
     localStorage.setItem('token', token);
-    axios.defaults.headers.common['x-auth-token'] = token;
+    api.defaults.headers.common['x-auth-token'] = token;
     setUser(normalizeUser(userData));
   };
 
   const logout = () => {
     localStorage.removeItem('token');
-    delete axios.defaults.headers.common['x-auth-token'];
+    delete api.defaults.headers.common['x-auth-token'];
     setUser(null);
   };
 
@@ -71,17 +71,17 @@ function App() {
     <Router>
       <div className="google-drive-app">
         <Routes>
-          <Route 
-            path="/login" 
-            element={!user ? <Login onLogin={login} /> : <Navigate to="/" />} 
+          <Route
+            path="/login"
+            element={!user ? <Login onLogin={login} /> : <Navigate to="/" />}
           />
-          <Route 
-            path="/register" 
-            element={!user ? <Register onLogin={login} /> : <Navigate to="/" />} 
+          <Route
+            path="/register"
+            element={!user ? <Register onLogin={login} /> : <Navigate to="/" />}
           />
-          <Route 
-            path="/" 
-            element={user ? <Dashboard user={user} onLogout={logout} /> : <Navigate to="/login" />} 
+          <Route
+            path="/"
+            element={user ? <Dashboard user={user} onLogout={logout} /> : <Navigate to="/login" />}
           />
           {/* Updated this line ↓ from /share/:token to /shared/:token */}
           <Route path="/shared/:token" element={<ShareFile />} />

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
+import api from '../api';
 import './Auth.css';
 
 const Login = ({ onLogin }) => {
@@ -23,15 +23,15 @@ const Login = ({ onLogin }) => {
     setError('');
 
     try {
-      const res = await axios.post('/auth/login', formData);
+      const res = await api.post('/auth/login', formData);
       onLogin(res.data.token, res.data.user);
     } catch (err) {
-  console.log("Full Error:", err);
-  console.log("Response:", err.response);
-  console.log("Data:", err.response?.data);
+      console.log("Full Error:", err);
+      console.log("Response:", err.response);
+      console.log("Data:", err.response?.data);
 
-  setError(err.response?.data?.message || err.message);
-} finally {
+      setError(err.response?.data?.message || err.message);
+    } finally {
       setLoading(false);
     }
   };
@@ -40,9 +40,9 @@ const Login = ({ onLogin }) => {
     <div className="auth-container">
       <div className="auth-header">
         <div className="header-left">
-          <img 
-            src="/images/drive-logo.jpg" 
-            alt="Drive Logo" 
+          <img
+            src="/images/drive-logo.jpg"
+            alt="Drive Logo"
             className="drive-logo-img"
           />
           <h1>Google Drive </h1>
