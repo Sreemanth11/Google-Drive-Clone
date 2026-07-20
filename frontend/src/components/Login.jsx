@@ -26,8 +26,12 @@ const Login = ({ onLogin }) => {
       const res = await axios.post('/auth/login', formData);
       onLogin(res.data.token, res.data.user);
     } catch (err) {
-      setError(err.response?.data?.message || 'Something went wrong');
-    } finally {
+  console.log("Full Error:", err);
+  console.log("Response:", err.response);
+  console.log("Data:", err.response?.data);
+
+  setError(err.response?.data?.message || err.message);
+} finally {
       setLoading(false);
     }
   };
