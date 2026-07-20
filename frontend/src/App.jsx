@@ -7,9 +7,6 @@ import ShareFile from './components/ShareFile';
 import './App.css';
 import api from './api';
 
-// Configure axios
-axios.defaults.baseURL = import.meta.env.VITE_API_URL;
-
 function App() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
